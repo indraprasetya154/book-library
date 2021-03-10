@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -36,7 +38,18 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $result = Book::create($request->all());
+
+            DB::commit();
+
+            return response()->json(['message' => 'OK', 'data' => new BookResource($result)], Response::HTTP_CREATED);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json(['message' => $th], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -47,7 +60,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        return new BookResource($book);
     }
 
     /**
@@ -59,7 +72,18 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $book->fill($request->all())->save();
+
+            DB::commit();
+
+            return response()->json(['message' => 'OK', 'data' => new BookResource($book)], Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json(['message' => $th], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -70,7 +94,8 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $book->delete();
+        return response()->json(['message' => 'Success Delete Data'], Response::HTTP_OK);
     }
 
 
@@ -101,8 +126,8 @@ class BookController extends Controller
      */
     protected function searchRow($request, $records)
     {
-        if ($request->has('name')) {
-            $records = $records->where('name', 'LIKE', '%' . $request->name .'%');
+        if ($request->has('title')) {
+            $records = $records->where('title', 'LIKE', '%' . $request->title .'%');
         }
 
         if ($request->has('release_year')) {
