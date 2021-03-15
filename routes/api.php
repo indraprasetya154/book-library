@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\API\BookController;
+use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\AuthorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
