@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BookRequest;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
+use App\Models\Models\BookCategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -33,6 +33,15 @@ class BookController extends Controller
     {
         $book = new Book;
         $book->fill($request->validated());
+        if ($book) {
+            foreach ($request->categories as $item) {
+                $bookCategory = new BookCategory;
+                $bookCategory->fill([
+                    'book_id' => $book->id,
+                    'category_id' => $item
+                ]);
+            }
+        }
 
         return new BookResource($book);
     }
@@ -55,7 +64,7 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $book)
+    public function update(BookRequest $request, Book $book)
     {
         $book->fill($request->all())->save();
         return new BookResource($book);

@@ -19,7 +19,7 @@ class CreateBookCategoriesTable extends Migration
                 ->constrained('books')
                 ->onDelete('cascade');
             $table->foreignId('category_id')
-                ->constrained('books')
+                ->constrained('categories')
                 ->onDelete('cascade');
             $table->timestamps();
         });

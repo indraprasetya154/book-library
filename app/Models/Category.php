@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Models\BookCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,6 +18,6 @@ class Category extends Model
 
     public function bookCategories()
     {
-        return $this->belongsToMany(BookRequest::class, 'category_id');
+        return $this->belongsToMany(BookCategory::class, 'category_id');
     }
 }
