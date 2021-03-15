@@ -19,8 +19,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $records    = Book::paginate();
-        return BookResource::collection($records);
+        return BookResource::collection(Book::with(['author', 'categories'])->paginate());
     }
 
     /**
@@ -34,19 +33,8 @@ class BookController extends Controller
         $book = new Book;
         $book->fill($request->validated());
         $book->save();
-        $book->bookCategories()->attach($request->categories);
-        // if ($book) {
-        //     foreach ($request->categories as $item) {
-        //         $bookCategory = new BookCategory;
-        //         $bookCategory->fill([
-        //             'book_id' => $book->id,
-        //             'category_id' => $item
-        //         ]);
-        //         $bookCategory->save();
-        //     }
-        // }
 
-        return new BookResource($book);
+        return new BookResource($book->load('author'));
     }
 
     /**
@@ -57,7 +45,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        return new BookResource($book);
+        return new BookResource($book->load('author'));
     }
 
     /**
@@ -70,7 +58,7 @@ class BookController extends Controller
     public function update(BookRequest $request, Book $book)
     {
         $book->fill($request->all())->save();
-        return new BookResource($book);
+        return new BookResource($book->load('author'));
     }
 
     /**
