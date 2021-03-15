@@ -32,6 +32,7 @@ class CategoryController extends Controller
     {
         $category = new Category;
         $category->fill($request->validated());
+        $category->save();
 
         return new CategoryResource($category);
     }

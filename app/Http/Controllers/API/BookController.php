@@ -33,15 +33,18 @@ class BookController extends Controller
     {
         $book = new Book;
         $book->fill($request->validated());
-        if ($book) {
-            foreach ($request->categories as $item) {
-                $bookCategory = new BookCategory;
-                $bookCategory->fill([
-                    'book_id' => $book->id,
-                    'category_id' => $item
-                ]);
-            }
-        }
+        $book->save();
+        $book->bookCategories()->attach($request->categories);
+        // if ($book) {
+        //     foreach ($request->categories as $item) {
+        //         $bookCategory = new BookCategory;
+        //         $bookCategory->fill([
+        //             'book_id' => $book->id,
+        //             'category_id' => $item
+        //         ]);
+        //         $bookCategory->save();
+        //     }
+        // }
 
         return new BookResource($book);
     }

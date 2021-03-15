@@ -32,6 +32,7 @@ class AuthorController extends Controller
     {
         $author = new Author;
         $author->fill($request->validated());
+        $author->save();
 
         return new AuthorResource($author);
     }
