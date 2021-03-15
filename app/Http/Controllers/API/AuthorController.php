@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Author;
 use App\Http\Requests\AuthorRequest;
 use App\Http\Resources\AuthorResource;
+use App\Models\Author;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class AuthorController extends Controller
@@ -32,6 +32,7 @@ class AuthorController extends Controller
     {
         $author = new Author;
         $author->fill($request->validated());
+        $author->save();
 
         return new AuthorResource($author);
     }
